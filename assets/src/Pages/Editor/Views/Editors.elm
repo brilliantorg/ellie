@@ -1,4 +1,4 @@
-module Pages.Editor.Views.Editors exposing (Config, containerStyles, editorStyles, errorToLinterMessages, problemToLinterMessage, renderChunks, view, viewEditorHeader)
+module Pages.Editor.Views.Editors exposing (Config, containerStyles, editorStyles, errorToLinterMessages, problemToLinterMessage, renderChunks, view)
 
 import Css exposing (..)
 import Ellie.Ui.CodeEditor as CodeEditor
@@ -16,8 +16,8 @@ type alias Config msg =
     { elmCode : String
     , onElmChange : String -> msg
     , onTokenChange : CodeEditor.Located CodeEditor.Token -> msg
-    , htmlCode : String
-    , onHtmlChange : String -> msg
+    , markupCode : String
+    , onMarkupChange : String -> msg
     , onResize : Float -> msg
     , ratio : Float
     , vimMode : Bool
@@ -76,9 +76,26 @@ view config =
             , originalRatio = 0.75
             , onResize = config.onResize
             , minSize = 24
-            , first =
+            , lowerEditor =
                 Html.div [ containerStyles ]
-                    [ viewEditorHeader config "Brelm" "Format Elm Code" config.onFormat <| Icon.view Icon.Format
+                    [ Html.div
+                        [ viewEditorHeaderStyle ]
+                        [ viewEditorHeaderLabel "Elm"
+                        , viewEditorHeaderButtons
+                            [ viewEditorHeaderButton config.onFormat "Format Elm Code" <|
+                                Icon.view Icon.Format
+                            , viewEditorHeaderButton config.onCollapse "Collapse Markup Editor" <|
+                                if config.ratio == 1 then
+                                    Html.div
+                                        [ css [ height (pct 100), transform (rotate (deg 180)) ] ]
+                                        [ Icon.view Icon.Chevron ]
+
+                                else
+                                    Icon.view Icon.Chevron
+                            ]
+                        ]
+
+                    -- viewEditorHeader "Elm" "Format Elm Code" config.onFormat <| Icon.view Icon.Format
                     , Html.div [ editorStyles ]
                         [ CodeEditor.view
                             [ CodeEditor.value config.elmCode
@@ -124,24 +141,17 @@ view config =
                         Nothing ->
                             Html.text ""
                     ]
-            , second =
+            , upperEditor =
                 Html.div [ containerStyles ]
-                    [ viewEditorHeader config "HTML" "Collapse HTML Editor" config.onCollapse <|
-                        if config.ratio == 1 then
-                            Html.div
-                                [ css [ height (pct 100), transform (rotate (deg 180)) ] ]
-                                [ Icon.view Icon.Chevron ]
-
-                        else
-                            Icon.view Icon.Chevron
+                    [ Html.div [ viewEditorHeaderStyle ] [ viewEditorHeaderLabel "Brilliant Markup" ]
                     , Html.div [ editorStyles ]
                         [ CodeEditor.view
-                            [ CodeEditor.value config.htmlCode
-                            , CodeEditor.onChange config.onHtmlChange
-                            , CodeEditor.mode "htmlmixed"
+                            [ CodeEditor.value config.markupCode
+                            , CodeEditor.onChange config.onMarkupChange
+                            , CodeEditor.mode "brillink"
                             , CodeEditor.tabSize 2
                             , CodeEditor.vim config.vimMode
-                            , CodeEditor.id "html"
+                            , CodeEditor.id "brillink"
                             ]
                         ]
                     ]
@@ -171,57 +181,72 @@ containerStyles =
         ]
 
 
-viewEditorHeader : Config msg -> String -> String -> msg -> Html msg -> Html msg
-viewEditorHeader config name tooltip msg icon =
+viewEditorHeaderStyle : Attribute msg
+viewEditorHeaderStyle =
+    css
+        [ backgroundColor Theme.editorHeaderBackground
+        , displayFlex
+        , justifyContent spaceBetween
+        , alignItems center
+        , padding2 zero (px 8)
+        , height (px 24)
+        , flexShrink (int 0)
+        ]
+
+
+viewEditorHeaderLabel name =
     Html.div
         [ css
-            [ backgroundColor Theme.editorHeaderBackground
-            , displayFlex
-            , justifyContent spaceBetween
-            , alignItems center
-            , padding2 zero (px 8)
-            , height (px 24)
-            , flexShrink (int 0)
+            [ fontSize (px 14)
+            , lineHeight (num 1)
+            , textTransform uppercase
+            , fontWeight bold
+            , color Theme.primaryForeground
             ]
         ]
-        [ Html.div
-            [ css
-                [ fontSize (px 14)
-                , lineHeight (num 1)
-                , textTransform uppercase
-                , fontWeight bold
-                , color Theme.primaryForeground
+        [ Html.text name ]
+
+
+viewEditorHeaderButtons buttons =
+    Html.div
+        [ css
+            [ displayFlex
+            , alignItems center
+            , justifyContent flexEnd
+            ]
+        ]
+        buttons
+
+
+viewEditorHeaderButton msg tooltip icon =
+    Html.button
+        [ css
+            [ property "background" "none"
+            , border zero
+            , outline zero
+            , display block
+            , width (px 24)
+            , height (px 24)
+            , padding (px 6)
+            , color Theme.secondaryForeground
+            , cursor pointer
+            , hover
+                [ color Theme.primaryForeground
+                ]
+            , active
+                [ transform <| scale 1.2
                 ]
             ]
-            [ Html.text name ]
-        , Html.div
-            [ css
-                [ displayFlex
-                , alignItems center
-                , justifyContent flexEnd
-                ]
-            ]
-            [ Html.button
-                [ css
-                    [ property "background" "none"
-                    , border zero
-                    , outline zero
-                    , display block
-                    , width (px 24)
-                    , height (px 24)
-                    , padding (px 6)
-                    , color Theme.secondaryForeground
-                    , cursor pointer
-                    , hover
-                        [ color Theme.primaryForeground
-                        ]
-                    , active
-                        [ transform <| scale 1.2
-                        ]
-                    ]
-                , Events.onClick msg
-                , Attributes.title tooltip
-                ]
-                [ icon ]
-            ]
+        , Events.onClick msg
+        , Attributes.title tooltip
+        ]
+        [ icon ]
+
+
+viewEditorHeader : String -> String -> msg -> Html msg -> Html msg
+viewEditorHeader name tooltip msg icon =
+    Html.div
+        [ viewEditorHeaderStyle ]
+        [ viewEditorHeaderLabel name
+        , viewEditorHeaderButtons [ viewEditorHeaderButton msg tooltip icon ]
         ]

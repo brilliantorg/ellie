@@ -20,6 +20,7 @@ type alias Id =
 
 type alias Revision =
     { htmlCode : String
+    , markupCode : String
     , elmCode : String
     , packages : List Package
     , title : String
@@ -39,8 +40,9 @@ embedLink id =
 
 localStorageDecoder : Decoder Revision
 localStorageDecoder =
-    Decode.map5 Revision
+    Decode.map6 Revision
         (Decode.field "htmlCode" Decode.string)
+        (Decode.field "markupCode" Decode.string)
         (Decode.field "elmCode" Decode.string)
         (Decode.field "packages" (Decode.list Package.decoder))
         (Decode.field "title" Decode.string)
@@ -51,6 +53,7 @@ localStorageEncoder : Revision -> Value
 localStorageEncoder revision =
     Encode.object
         [ ( "htmlCode", Encode.string revision.htmlCode )
+        , ( "markupCode", Encode.string revision.markupCode )
         , ( "elmCode", Encode.string revision.elmCode )
         , ( "packages", Encode.list Package.encoder revision.packages )
         , ( "title", Encode.string revision.title )
@@ -78,6 +81,20 @@ default packages =
 </body>
 </html>
 """
+    , markupCode = """# Let's do this
+
+### first
+Most of the dice you encounter when playing games of
+chance look the same: 6 faces, each of which has a differenr
+number of pips, from 1 to 6.
+[Continue -> next]
+
+### second
+The same die can also be represented with text:
+we'll say this is a **(1,2,3,4,5,6)** die. 
+That’s not the only possibility for a six-sided
+die!
+[Continue -> end]"""
     , elmCode = """module Main exposing (main)
 
 import Browser

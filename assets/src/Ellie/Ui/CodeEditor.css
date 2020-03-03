@@ -82,3 +82,60 @@ code-editor .CodeMirror {
 .CodeMirror .cm-attribute {
   color: #decb6b;
 }
+
+.CodeMirror .cm-header {
+  color: #72BBDB !important;
+  font-weight: bold !important;
+}
+
+.CodeMirror .cm-arrow {
+  color: #EEBA53 !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+}
+
+.CodeMirror .cm-sectiontag {
+  color: #EEBA53 !important;
+  text-decoration: none !important;
+}
+
+.CodeMirror .cm-markup-bracket {
+  font-weight: bold !important;
+  color: #006E92 !important;
+}
+
+.CodeMirror .cm-literal-arg {
+  color: #88D13F !important
+}
+
+.CodeMirror .cm-variable-arg {
+  font-weight: bold !important;
+}
+
+.CodeMirror .cm-literal-string {
+  color: #88D13F !important
+}
+
+.CodeMirror .cm-markup-label {
+  color: #CD8CFF !important;
+}
+
+.CodeMirror .cm-markup-tag {
+  color: #FF9590 !important;
+  text-decoration: none !important;
+}
+
+.CodeMirror .cm-markup-option-tag {
+  color: #EBC3C2 !important;
+  text-decoration: none !important;
+}
+
+.CodeMirror .cm-markup-keyword {
+  color: #FF9590 !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+}
+
+.CodeMirror .cm-markup-comment {
+  color: #808080 !important; 
+}

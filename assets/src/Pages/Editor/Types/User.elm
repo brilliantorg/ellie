@@ -29,7 +29,7 @@ default =
     { acceptedTerms = Nothing
     , settings =
         { fontSize = "14px"
-        , fontFamily = "monospace"
+        , fontFamily = "\"Source Code Pro\""
         , theme = Dark
         , vimMode = False
         }

@@ -143,8 +143,8 @@ viewWorkspace model =
         , originalRatio = 0.5
         , onResize = WorkingState.WorkbenchResized
         , minSize = 24
-        , first = viewEditors model
-        , second = viewWorkbench model
+        , upperEditor = viewEditors model
+        , lowerEditor = viewWorkbench model
         }
 
 
@@ -155,8 +155,8 @@ viewEditors model =
         , analysis = model.analysis
         , onElmChange = WorkingState.ElmCodeChanged
         , onTokenChange = WorkingState.TokenChanged
-        , htmlCode = model.htmlCode
-        , onHtmlChange = WorkingState.HtmlCodeChanged
+        , markupCode = model.markupCode
+        , onMarkupChange = WorkingState.MarkupCodeChanged
         , onResize = WorkingState.EditorsResized
         , ratio = model.editorsRatio
         , onFormat = WorkingState.FormatRequested

@@ -192,7 +192,7 @@ viewContent state =
             Panel.Html ->
                 viewOverlayed <|
                     CodeEditor.view
-                        [ CodeEditor.mode "htmlmixed"
+                        [ CodeEditor.mode "brillink"
                         , CodeEditor.value state.revision.data.htmlCode
                         , CodeEditor.readOnly
                         ]

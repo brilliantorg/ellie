@@ -73,6 +73,7 @@ defmodule Ellie.Adapters.Api.Ecto do
          {:ok, package_combos} <- Map.fetch(revision_data, "packages"),
          {:ok, packages} <- EnumHelpers.traverse_result(package_combos, &parse_package/1),
          {:ok, html_code} <- Map.fetch(revision_data, "htmlCode"),
+         {:ok, markup_code} <- Map.fetch(revision_data, "markupCode"),
          {:ok, elm_code} <- Map.fetch(revision_data, "elmCode"),
          {:ok, %{"projectId" => project_id_string, "revisionNumber" => revision_number}} <-
            Map.fetch(revision_data, "id"),
@@ -83,6 +84,7 @@ defmodule Ellie.Adapters.Api.Ecto do
         Repo.transaction(fn ->
           revision = %Revision{
             html_code: html_code,
+            markup_code: markup_code,
             elm_code: elm_code,
             title: title,
             elm_version: Version.create(0, 18, 0),

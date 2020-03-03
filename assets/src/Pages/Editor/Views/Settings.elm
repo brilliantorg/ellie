@@ -92,7 +92,7 @@ viewFontFamily { settings, onSettingsChange } =
                     ]
                 ]
                 [ TextInput.view
-                    { placeholder = "monospace"
+                    { placeholder = "\"Source Code Pro\""
                     , value = settings.fontFamily
                     , clearable = False
                     , icon = Nothing

@@ -20,8 +20,8 @@ type alias Config msg =
     , ratio : Float
     , originalRatio : Float
     , onResize : Float -> msg
-    , first : Html msg
-    , second : Html msg
+    , upperEditor : Html msg
+    , lowerEditor : Html msg
     , minSize : Int
     }
 
@@ -51,9 +51,9 @@ view config =
     in
     Html.node "ellie-ui-split-pane-group"
         attrs
-        [ Html.node "ellie-ui-split-pane-panel" [] [ config.first ]
+        [ Html.node "ellie-ui-split-pane-panel" [] [ config.upperEditor ]
         , Html.node "ellie-ui-split-pane-divider" [] []
-        , Html.node "ellie-ui-split-pane-panel" [] [ config.second ]
+        , Html.node "ellie-ui-split-pane-panel" [] [ config.lowerEditor ]
         ]
 
 

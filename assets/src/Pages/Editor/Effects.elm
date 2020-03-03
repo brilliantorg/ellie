@@ -46,6 +46,7 @@ getRevision revisionId =
         revisionQuery =
             SelectionSet.succeed Revision
                 |> SelectionSet.with ApiRevision.htmlCode
+                |> SelectionSet.with ApiRevision.markupCode
                 |> SelectionSet.with ApiRevision.elmCode
                 |> SelectionSet.with (ApiRevision.packages Package.selection)
                 |> SelectionSet.with (ApiHelpers.defaultField "" ApiRevision.title)
@@ -217,6 +218,7 @@ createRevision token termsVersion revision =
         arguments =
             { inputs =
                 { elmCode = revision.elmCode
+                , markupCode = revision.markupCode
                 , htmlCode = revision.htmlCode
                 , packages = List.map Package.toInputObject revision.packages
                 , termsVersion = termsVersion

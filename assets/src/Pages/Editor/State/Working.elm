@@ -56,6 +56,7 @@ type SuccessPane
 
 type alias Model =
     { elmCode : String
+    , markupCode : String
     , htmlCode : String
     , packages : List Package
     , projectName : String
@@ -115,6 +116,7 @@ reset token user recovery external defaultPackages =
                         && (revision.elmVersion.minor == Compiler.version.minor)
     in
     { elmCode = activeRevision.elmCode
+    , markupCode = activeRevision.markupCode
     , htmlCode = activeRevision.htmlCode
     , packages = activeRevision.packages
     , projectName = activeRevision.title
@@ -174,6 +176,7 @@ compilerVersion model =
 toRevision : Model -> Revision
 toRevision model =
     { elmCode = model.elmCode
+    , markupCode = model.markupCode
     , htmlCode = model.htmlCode
     , packages = model.packages
     , title = model.projectName
@@ -186,12 +189,14 @@ hasChanged model =
     case Replaceable.toMaybe model.revision of
         Nothing ->
             (model.elmCode /= model.defaultRevision.elmCode)
+                || (model.markupCode /= model.defaultRevision.markupCode)
                 || (model.htmlCode /= model.defaultRevision.htmlCode)
                 || (model.packages /= model.defaultRevision.packages)
                 || (model.projectName /= model.defaultRevision.title)
 
         Just ( _, revision ) ->
             (model.elmCode /= revision.elmCode)
+                || (model.markupCode /= revision.markupCode)
                 || (model.htmlCode /= revision.htmlCode)
                 || (model.packages /= revision.packages)
                 || (model.projectName /= revision.title)
@@ -220,6 +225,7 @@ canReplaceRevision revisionId model =
 type Msg
     = -- Editor stuff
       ElmCodeChanged String
+    | MarkupCodeChanged String
     | HtmlCodeChanged String
     | FormatRequested
     | FormatCompleted (Result () String)
@@ -672,6 +678,11 @@ update msg ({ user } as model) =
 
             ElmCodeChanged code ->
                 ( { model | elmCode = code }
+                , Command.none
+                )
+
+            MarkupCodeChanged code ->
+                ( { model | markupCode = code }
                 , Command.none
                 )
 

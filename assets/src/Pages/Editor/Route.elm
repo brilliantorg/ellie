@@ -31,6 +31,7 @@ revisionId =
 exampleRevision : Revision
 exampleRevision =
     { htmlCode = "hi"
+    , markupCode = "### Yep"
     , elmCode = "hello"
     , packages = []
     , title = "hi"
@@ -58,6 +59,10 @@ elmCode =
     QueryParser.string "elmcode"
         |> QueryParser.map (Maybe.withDefault "")
 
+markupCode : QueryParser.Parser String
+markupCode =
+    QueryParser.string "markupcode"
+        |> QueryParser.map (Maybe.withDefault "")
 
 htmlCode : QueryParser.Parser String
 htmlCode =
@@ -83,8 +88,9 @@ title =
 
 revision : QueryParser.Parser Revision
 revision =
-    QueryParser.map5 Revision
+    QueryParser.map6 Revision
         htmlCode
+        markupCode
         elmCode
         packages
         title
